@@ -1,0 +1,23 @@
+development: &default
+  adapter: postgresql
+  database: transgo_development
+  encoding: utf8
+  min_messages: warning
+  pool: 5
+  timeout: 5000
+  host: localhost
+  port: 5432
+  username: transgo
+  password: transgo
+
+test:
+  <<: *default
+  database: transgo_test
+
+production:
+  <<: *default
+  database: transgo_production 
+
+staging:
+  <<: *default
+  database: transgo_staging   
