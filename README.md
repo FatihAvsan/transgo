@@ -21,4 +21,3 @@ rake dev:seed
 rails s
 ```
 
-
