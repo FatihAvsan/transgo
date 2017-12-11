@@ -1,0 +1,535 @@
+  [1m[36m (84.3ms)[0m  [1mCREATE TABLE "schema_migrations" ("version" character varying NOT NULL) [0m
+  [1m[35m (70.5ms)[0m  CREATE UNIQUE INDEX  "unique_schema_migrations" ON "schema_migrations"  ("version")
+  [1m[36mActiveRecord::SchemaMigration Load (1.2ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to DeviseCreateUsers (20171211210957)
+  [1m[35m (0.6ms)[0m  BEGIN
+DEPRECATION WARNING: `#timestamps` was called without specifying an option for `null`. In Rails 5, this behavior will change to `null: false`. You should manually specify `null: true` to prevent the behavior of your existing migrations from changing. (called from block in change at /home/avsan/transgo/db/migrate/20171211210957_devise_create_users.rb:38)
+  [1m[36m (165.3ms)[0m  [1mCREATE TABLE "users" ("id" serial primary key, "email" character varying DEFAULT '' NOT NULL, "encrypted_password" character varying DEFAULT '' NOT NULL, "reset_password_token" character varying, "reset_password_sent_at" timestamp, "remember_created_at" timestamp, "sign_in_count" integer DEFAULT 0 NOT NULL, "current_sign_in_at" timestamp, "last_sign_in_at" timestamp, "current_sign_in_ip" inet, "last_sign_in_ip" inet, "name" character varying, "surname" character varying, "is_active" boolean DEFAULT 't', "time_zone" character varying DEFAULT 'UTC', "created_at" timestamp, "updated_at" timestamp) [0m
+  [1m[35m (60.1ms)[0m  CREATE UNIQUE INDEX  "index_users_on_email" ON "users"  ("email")
+  [1m[36m (61.0ms)[0m  [1mCREATE UNIQUE INDEX  "index_users_on_reset_password_token" ON "users"  ("reset_password_token")[0m
+  [1m[35mSQL (1.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20171211210957"]]
+  [1m[36m (24.0ms)[0m  [1mCOMMIT[0m
+Migrating to DeviseCreateAdmins (20171211211010)
+  [1m[35m (0.6ms)[0m  BEGIN
+DEPRECATION WARNING: `#timestamps` was called without specifying an option for `null`. In Rails 5, this behavior will change to `null: false`. You should manually specify `null: true` to prevent the behavior of your existing migrations from changing. (called from block in change at /home/avsan/transgo/db/migrate/20171211211010_devise_create_admins.rb:38)
+  [1m[36m (113.3ms)[0m  [1mCREATE TABLE "admins" ("id" serial primary key, "email" character varying DEFAULT '' NOT NULL, "encrypted_password" character varying DEFAULT '' NOT NULL, "reset_password_token" character varying, "reset_password_sent_at" timestamp, "remember_created_at" timestamp, "sign_in_count" integer DEFAULT 0 NOT NULL, "current_sign_in_at" timestamp, "last_sign_in_at" timestamp, "current_sign_in_ip" inet, "last_sign_in_ip" inet, "name" character varying, "surname" character varying, "is_active" boolean DEFAULT 't', "time_zone" character varying DEFAULT 'UTC', "created_at" timestamp, "updated_at" timestamp) [0m
+  [1m[35m (49.6ms)[0m  CREATE UNIQUE INDEX  "index_admins_on_email" ON "admins"  ("email")
+  [1m[36m (49.7ms)[0m  [1mCREATE UNIQUE INDEX  "index_admins_on_reset_password_token" ON "admins"  ("reset_password_token")[0m
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20171211211010"]]
+  [1m[36m (24.4ms)[0m  [1mCOMMIT[0m
+Migrating to CreateCountries (20171211211104)
+  [1m[35m (0.6ms)[0m  BEGIN
+  [1m[36m (99.3ms)[0m  [1mCREATE TABLE "countries" ("id" serial primary key, "name" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) [0m
+  [1m[35mSQL (0.5ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20171211211104"]]
+  [1m[36m (24.9ms)[0m  [1mCOMMIT[0m
+Migrating to CreateCities (20171211211115)
+  [1m[35m (0.7ms)[0m  BEGIN
+  [1m[36m (132.9ms)[0m  [1mCREATE TABLE "cities" ("id" serial primary key, "name" character varying, "country_id" integer, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) [0m
+  [1m[35m (50.0ms)[0m  CREATE  INDEX  "index_cities_on_country_id" ON "cities"  ("country_id")
+  [1m[36m (4.4ms)[0m  [1mALTER TABLE "cities" ADD CONSTRAINT "fk_rails_996e05be41"
+FOREIGN KEY ("country_id")
+  REFERENCES "countries" ("id")
+[0m
+  [1m[35mSQL (0.6ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20171211211115"]]
+  [1m[36m (23.5ms)[0m  [1mCOMMIT[0m
+Migrating to InstallAudited (20171211211127)
+  [1m[35m (0.7ms)[0m  BEGIN
+  [1m[36m (117.6ms)[0m  [1mCREATE TABLE "audits" ("id" serial primary key, "auditable_id" integer, "auditable_type" character varying, "associated_id" integer, "associated_type" character varying, "user_id" integer, "user_type" character varying, "username" character varying, "action" character varying, "audited_changes" text, "version" integer DEFAULT 0, "comment" character varying, "remote_address" character varying, "request_uuid" character varying, "created_at" timestamp) [0m
+  [1m[35m (49.4ms)[0m  CREATE  INDEX  "auditable_index" ON "audits"  ("auditable_id", "auditable_type")
+  [1m[36m (49.4ms)[0m  [1mCREATE  INDEX  "associated_index" ON "audits"  ("associated_id", "associated_type")[0m
+  [1m[35m (87.4ms)[0m  CREATE  INDEX  "user_index" ON "audits"  ("user_id", "user_type")
+  [1m[36m (68.7ms)[0m  [1mCREATE  INDEX  "index_audits_on_request_uuid" ON "audits"  ("request_uuid")[0m
+  [1m[35m (50.2ms)[0m  CREATE  INDEX  "index_audits_on_created_at" ON "audits"  ("created_at")
+  [1m[36mSQL (0.6ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ($1)[0m  [["version", "20171211211127"]]
+  [1m[35m (18.8ms)[0m  COMMIT
+  [1m[36mActiveRecord::SchemaMigration Load (0.9ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (8.1ms)[0m  SELECT t2.oid::regclass::text AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confupdtype AS on_update, c.confdeltype AS on_delete
+FROM pg_constraint c
+JOIN pg_class t1 ON c.conrelid = t1.oid
+JOIN pg_class t2 ON c.confrelid = t2.oid
+JOIN pg_attribute a1 ON a1.attnum = c.conkey[1] AND a1.attrelid = t1.oid
+JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
+JOIN pg_namespace t3 ON c.connamespace = t3.oid
+WHERE c.contype = 'f'
+  AND t1.relname = 'admins'
+  AND t3.nspname = ANY (current_schemas(false))
+ORDER BY c.conname
+
+  [1m[36m (6.9ms)[0m  [1mSELECT t2.oid::regclass::text AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confupdtype AS on_update, c.confdeltype AS on_delete
+FROM pg_constraint c
+JOIN pg_class t1 ON c.conrelid = t1.oid
+JOIN pg_class t2 ON c.confrelid = t2.oid
+JOIN pg_attribute a1 ON a1.attnum = c.conkey[1] AND a1.attrelid = t1.oid
+JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
+JOIN pg_namespace t3 ON c.connamespace = t3.oid
+WHERE c.contype = 'f'
+  AND t1.relname = 'audits'
+  AND t3.nspname = ANY (current_schemas(false))
+ORDER BY c.conname
+[0m
+  [1m[35m (7.5ms)[0m  SELECT t2.oid::regclass::text AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confupdtype AS on_update, c.confdeltype AS on_delete
+FROM pg_constraint c
+JOIN pg_class t1 ON c.conrelid = t1.oid
+JOIN pg_class t2 ON c.confrelid = t2.oid
+JOIN pg_attribute a1 ON a1.attnum = c.conkey[1] AND a1.attrelid = t1.oid
+JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
+JOIN pg_namespace t3 ON c.connamespace = t3.oid
+WHERE c.contype = 'f'
+  AND t1.relname = 'cities'
+  AND t3.nspname = ANY (current_schemas(false))
+ORDER BY c.conname
+
+  [1m[36m (7.4ms)[0m  [1mSELECT t2.oid::regclass::text AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confupdtype AS on_update, c.confdeltype AS on_delete
+FROM pg_constraint c
+JOIN pg_class t1 ON c.conrelid = t1.oid
+JOIN pg_class t2 ON c.confrelid = t2.oid
+JOIN pg_attribute a1 ON a1.attnum = c.conkey[1] AND a1.attrelid = t1.oid
+JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
+JOIN pg_namespace t3 ON c.connamespace = t3.oid
+WHERE c.contype = 'f'
+  AND t1.relname = 'countries'
+  AND t3.nspname = ANY (current_schemas(false))
+ORDER BY c.conname
+[0m
+  [1m[35m (7.4ms)[0m  SELECT t2.oid::regclass::text AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confupdtype AS on_update, c.confdeltype AS on_delete
+FROM pg_constraint c
+JOIN pg_class t1 ON c.conrelid = t1.oid
+JOIN pg_class t2 ON c.confrelid = t2.oid
+JOIN pg_attribute a1 ON a1.attnum = c.conkey[1] AND a1.attrelid = t1.oid
+JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
+JOIN pg_namespace t3 ON c.connamespace = t3.oid
+WHERE c.contype = 'f'
+  AND t1.relname = 'users'
+  AND t3.nspname = ANY (current_schemas(false))
+ORDER BY c.conname
+
+  [1m[36mActiveRecord::SchemaMigration Load (1.0ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.6ms)[0m  BEGIN
+  [1m[36mAdmin Exists (2.5ms)[0m  [1mSELECT  1 AS one FROM "admins" WHERE "admins"."email" = 'admin@transgo.com' LIMIT 1[0m
+  [1m[35mAdmin Exists (0.9ms)[0m  SELECT  1 AS one FROM "admins" WHERE "admins"."email" = 'admin@transgo.com' LIMIT 1
+  [1m[36mSQL (1.5ms)[0m  [1mINSERT INTO "admins" ("email", "name", "surname", "encrypted_password", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["email", "admin@transgo.com"], ["name", "Admin"], ["surname", "Admin"], ["encrypted_password", "$2a$10$9IOeJnEqnilmVo/sZcDRKev9d/rSng.NFyBVL9hDHVlS0YIIl1j.2"], ["created_at", "2017-12-11 21:18:17.294996"], ["updated_at", "2017-12-11 21:18:17.294996"]]
+  [1m[35m (2.2ms)[0m  SELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2  [["auditable_id", 1], ["auditable_type", "Admin"]]
+  [1m[36mSQL (1.6ms)[0m  [1mINSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["action", "create"], ["audited_changes", "---\nemail: admin@transgo.com\nencrypted_password: \"$2a$10$9IOeJnEqnilmVo/sZcDRKev9d/rSng.NFyBVL9hDHVlS0YIIl1j.2\"\nreset_password_token: \nreset_password_sent_at: \nremember_created_at: \nsign_in_count: 0\ncurrent_sign_in_at: \nlast_sign_in_at: \ncurrent_sign_in_ip: \nlast_sign_in_ip: \nname: Admin\nsurname: Admin\nis_active: true\ntime_zone: UTC\n"], ["auditable_id", 1], ["auditable_type", "Admin"], ["created_at", "2017-12-11 21:18:17.363522"], ["version", 1], ["request_uuid", "04eb70b1-50dd-4c6a-b6f7-9ac04e8f7ebc"]]
+  [1m[35m (24.6ms)[0m  COMMIT
+  [1m[36mCountry Load (1.1ms)[0m  [1mSELECT "countries".* FROM "countries"[0m
+  [1m[35m (0.7ms)[0m  BEGIN
+  [1m[36mSQL (1.2ms)[0m  [1mINSERT INTO "countries" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "Türkiye"], ["created_at", "2017-12-11 21:18:17.483839"], ["updated_at", "2017-12-11 21:18:17.483839"]]
+  [1m[35m (1.5ms)[0m  SELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2  [["auditable_id", 1], ["auditable_type", "Country"]]
+  [1m[36mSQL (0.8ms)[0m  [1mINSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["action", "create"], ["audited_changes", "---\nname: Türkiye\n"], ["auditable_id", 1], ["auditable_type", "Country"], ["created_at", "2017-12-11 21:18:17.498782"], ["version", 1], ["request_uuid", "0a2ddafa-a49a-4438-ba2d-67bceaace9f0"]]
+  [1m[35m (12.6ms)[0m  COMMIT
+  [1m[36mCity Load (1.1ms)[0m  [1mSELECT "cities".* FROM "cities"[0m
+  [1m[35mCountry Load (1.6ms)[0m  SELECT  "countries".* FROM "countries"  ORDER BY "countries"."id" ASC LIMIT 1
+  [1m[36m (0.6ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (1.9ms)[0m  INSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["name", "Adana"], ["country_id", 1], ["created_at", "2017-12-11 21:18:17.561644"], ["updated_at", "2017-12-11 21:18:17.561644"]]
+  [1m[36m (1.3ms)[0m  [1mSELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2[0m  [["auditable_id", 1], ["auditable_type", "City"]]
+  [1m[35mSQL (1.0ms)[0m  INSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"  [["action", "create"], ["audited_changes", "---\nname: Adana\ncountry_id: 1\n"], ["auditable_id", 1], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:17.581275"], ["version", 1], ["request_uuid", "f6fe1e2b-e888-45e2-af0c-bf2be3007232"]]
+  [1m[36m (4.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36mSQL (1.2ms)[0m  [1mINSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Adıyaman"], ["country_id", 1], ["created_at", "2017-12-11 21:18:17.602114"], ["updated_at", "2017-12-11 21:18:17.602114"]]
+  [1m[35m (1.3ms)[0m  SELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2  [["auditable_id", 2], ["auditable_type", "City"]]
+  [1m[36mSQL (1.2ms)[0m  [1mINSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["action", "create"], ["audited_changes", "---\nname: Adıyaman\ncountry_id: 1\n"], ["auditable_id", 2], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:17.615932"], ["version", 1], ["request_uuid", "4e6dedd6-2e7d-49e1-bc80-3ae2fb78a3f2"]]
+  [1m[35m (13.1ms)[0m  COMMIT
+  [1m[36m (0.5ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (1.1ms)[0m  INSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["name", "Afyonkarahisar"], ["country_id", 1], ["created_at", "2017-12-11 21:18:17.646307"], ["updated_at", "2017-12-11 21:18:17.646307"]]
+  [1m[36m (1.1ms)[0m  [1mSELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2[0m  [["auditable_id", 3], ["auditable_type", "City"]]
+  [1m[35mSQL (0.9ms)[0m  INSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"  [["action", "create"], ["audited_changes", "---\nname: Afyonkarahisar\ncountry_id: 1\n"], ["auditable_id", 3], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:17.658152"], ["version", 1], ["request_uuid", "f09240b5-67bc-4801-af9e-64e9e3994851"]]
+  [1m[36m (7.1ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.4ms)[0m  BEGIN
+  [1m[36mSQL (1.2ms)[0m  [1mINSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Ağrı"], ["country_id", 1], ["created_at", "2017-12-11 21:18:17.679109"], ["updated_at", "2017-12-11 21:18:17.679109"]]
+  [1m[35m (1.2ms)[0m  SELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2  [["auditable_id", 4], ["auditable_type", "City"]]
+  [1m[36mSQL (0.9ms)[0m  [1mINSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["action", "create"], ["audited_changes", "---\nname: Ağrı\ncountry_id: 1\n"], ["auditable_id", 4], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:17.691283"], ["version", 1], ["request_uuid", "302ebe61-18fa-4210-a4c5-1eef76db078d"]]
+  [1m[35m (6.7ms)[0m  COMMIT
+  [1m[36m (0.5ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (1.2ms)[0m  INSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["name", "Amasya"], ["country_id", 1], ["created_at", "2017-12-11 21:18:17.712164"], ["updated_at", "2017-12-11 21:18:17.712164"]]
+  [1m[36m (0.7ms)[0m  [1mSELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2[0m  [["auditable_id", 5], ["auditable_type", "City"]]
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"  [["action", "create"], ["audited_changes", "---\nname: Amasya\ncountry_id: 1\n"], ["auditable_id", 5], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:17.725284"], ["version", 1], ["request_uuid", "c4937414-8d0a-44f8-b2a9-6df77a174876"]]
+  [1m[36m (6.3ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36mSQL (1.1ms)[0m  [1mINSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Ankara"], ["country_id", 1], ["created_at", "2017-12-11 21:18:17.744801"], ["updated_at", "2017-12-11 21:18:17.744801"]]
+  [1m[35m (0.7ms)[0m  SELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2  [["auditable_id", 6], ["auditable_type", "City"]]
+  [1m[36mSQL (0.8ms)[0m  [1mINSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["action", "create"], ["audited_changes", "---\nname: Ankara\ncountry_id: 1\n"], ["auditable_id", 6], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:17.756929"], ["version", 1], ["request_uuid", "75cf8946-c8be-4567-8dac-70d822341e6f"]]
+  [1m[35m (7.6ms)[0m  COMMIT
+  [1m[36m (0.5ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["name", "Antalya"], ["country_id", 1], ["created_at", "2017-12-11 21:18:17.777785"], ["updated_at", "2017-12-11 21:18:17.777785"]]
+  [1m[36m (0.7ms)[0m  [1mSELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2[0m  [["auditable_id", 7], ["auditable_type", "City"]]
+  [1m[35mSQL (0.7ms)[0m  INSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"  [["action", "create"], ["audited_changes", "---\nname: Antalya\ncountry_id: 1\n"], ["auditable_id", 7], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:17.789093"], ["version", 1], ["request_uuid", "327148a5-0659-4193-8d6d-c520bcd1e5f1"]]
+  [1m[36m (8.8ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36mSQL (0.8ms)[0m  [1mINSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Artvin"], ["country_id", 1], ["created_at", "2017-12-11 21:18:17.810892"], ["updated_at", "2017-12-11 21:18:17.810892"]]
+  [1m[35m (0.7ms)[0m  SELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2  [["auditable_id", 8], ["auditable_type", "City"]]
+  [1m[36mSQL (0.7ms)[0m  [1mINSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["action", "create"], ["audited_changes", "---\nname: Artvin\ncountry_id: 1\n"], ["auditable_id", 8], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:17.821977"], ["version", 1], ["request_uuid", "65f81db5-5739-4c0c-be23-83e768fd182f"]]
+  [1m[35m (9.2ms)[0m  COMMIT
+  [1m[36m (0.5ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["name", "Aydın"], ["country_id", 1], ["created_at", "2017-12-11 21:18:17.843903"], ["updated_at", "2017-12-11 21:18:17.843903"]]
+  [1m[36m (0.7ms)[0m  [1mSELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2[0m  [["auditable_id", 9], ["auditable_type", "City"]]
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"  [["action", "create"], ["audited_changes", "---\nname: Aydın\ncountry_id: 1\n"], ["auditable_id", 9], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:17.855574"], ["version", 1], ["request_uuid", "142081e6-6d05-4f38-bea6-c5d2d7a0c0b3"]]
+  [1m[36m (8.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36mSQL (0.9ms)[0m  [1mINSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Balıkesir"], ["country_id", 1], ["created_at", "2017-12-11 21:18:17.877118"], ["updated_at", "2017-12-11 21:18:17.877118"]]
+  [1m[35m (0.7ms)[0m  SELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2  [["auditable_id", 10], ["auditable_type", "City"]]
+  [1m[36mSQL (0.7ms)[0m  [1mINSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["action", "create"], ["audited_changes", "---\nname: Balıkesir\ncountry_id: 1\n"], ["auditable_id", 10], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:17.888665"], ["version", 1], ["request_uuid", "5f093a8a-2ca5-47be-b5a6-528cb5679995"]]
+  [1m[35m (8.0ms)[0m  COMMIT
+  [1m[36m (0.5ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.9ms)[0m  INSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["name", "Bilecik"], ["country_id", 1], ["created_at", "2017-12-11 21:18:17.910042"], ["updated_at", "2017-12-11 21:18:17.910042"]]
+  [1m[36m (0.8ms)[0m  [1mSELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2[0m  [["auditable_id", 11], ["auditable_type", "City"]]
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"  [["action", "create"], ["audited_changes", "---\nname: Bilecik\ncountry_id: 1\n"], ["auditable_id", 11], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:17.921774"], ["version", 1], ["request_uuid", "3058be8f-e0aa-438a-acd2-82f33fe847e5"]]
+  [1m[36m (8.0ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.4ms)[0m  BEGIN
+  [1m[36mSQL (0.8ms)[0m  [1mINSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Bingöl"], ["country_id", 1], ["created_at", "2017-12-11 21:18:17.943169"], ["updated_at", "2017-12-11 21:18:17.943169"]]
+  [1m[35m (0.7ms)[0m  SELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2  [["auditable_id", 12], ["auditable_type", "City"]]
+  [1m[36mSQL (0.7ms)[0m  [1mINSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["action", "create"], ["audited_changes", "---\nname: Bingöl\ncountry_id: 1\n"], ["auditable_id", 12], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:17.954531"], ["version", 1], ["request_uuid", "b3faea0f-6ade-4e09-a348-6acd868f8548"]]
+  [1m[35m (8.2ms)[0m  COMMIT
+  [1m[36m (0.5ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["name", "Bitlis"], ["country_id", 1], ["created_at", "2017-12-11 21:18:17.976211"], ["updated_at", "2017-12-11 21:18:17.976211"]]
+  [1m[36m (0.7ms)[0m  [1mSELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2[0m  [["auditable_id", 13], ["auditable_type", "City"]]
+  [1m[35mSQL (0.7ms)[0m  INSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"  [["action", "create"], ["audited_changes", "---\nname: Bitlis\ncountry_id: 1\n"], ["auditable_id", 13], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:17.987592"], ["version", 1], ["request_uuid", "67e28728-e7f9-4deb-97a0-8a83615a109c"]]
+  [1m[36m (8.8ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36mSQL (0.8ms)[0m  [1mINSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Bolu"], ["country_id", 1], ["created_at", "2017-12-11 21:18:18.008886"], ["updated_at", "2017-12-11 21:18:18.008886"]]
+  [1m[35m (0.7ms)[0m  SELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2  [["auditable_id", 14], ["auditable_type", "City"]]
+  [1m[36mSQL (1.0ms)[0m  [1mINSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["action", "create"], ["audited_changes", "---\nname: Bolu\ncountry_id: 1\n"], ["auditable_id", 14], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:18.020066"], ["version", 1], ["request_uuid", "28766a3f-37c8-42f3-80f2-59b217942672"]]
+  [1m[35m (8.2ms)[0m  COMMIT
+  [1m[36m (0.5ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["name", "Burdur"], ["country_id", 1], ["created_at", "2017-12-11 21:18:18.041957"], ["updated_at", "2017-12-11 21:18:18.041957"]]
+  [1m[36m (0.7ms)[0m  [1mSELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2[0m  [["auditable_id", 15], ["auditable_type", "City"]]
+  [1m[35mSQL (0.7ms)[0m  INSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"  [["action", "create"], ["audited_changes", "---\nname: Burdur\ncountry_id: 1\n"], ["auditable_id", 15], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:18.053256"], ["version", 1], ["request_uuid", "2919ecc4-b3de-4d35-ab45-3a2eeb9dae4b"]]
+  [1m[36m (8.5ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36mSQL (0.8ms)[0m  [1mINSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Bursa"], ["country_id", 1], ["created_at", "2017-12-11 21:18:18.074827"], ["updated_at", "2017-12-11 21:18:18.074827"]]
+  [1m[35m (0.7ms)[0m  SELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2  [["auditable_id", 16], ["auditable_type", "City"]]
+  [1m[36mSQL (0.7ms)[0m  [1mINSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["action", "create"], ["audited_changes", "---\nname: Bursa\ncountry_id: 1\n"], ["auditable_id", 16], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:18.086082"], ["version", 1], ["request_uuid", "22c1c0d7-1410-42e4-9086-8f04f0b47e81"]]
+  [1m[35m (9.4ms)[0m  COMMIT
+  [1m[36m (0.5ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.9ms)[0m  INSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["name", "Çanakkale"], ["country_id", 1], ["created_at", "2017-12-11 21:18:18.108446"], ["updated_at", "2017-12-11 21:18:18.108446"]]
+  [1m[36m (0.8ms)[0m  [1mSELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2[0m  [["auditable_id", 17], ["auditable_type", "City"]]
+  [1m[35mSQL (1.0ms)[0m  INSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"  [["action", "create"], ["audited_changes", "---\nname: Çanakkale\ncountry_id: 1\n"], ["auditable_id", 17], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:18.120445"], ["version", 1], ["request_uuid", "94cdabe1-daaf-4913-a4e1-ed68cf54e3f7"]]
+  [1m[36m (6.5ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36mSQL (0.8ms)[0m  [1mINSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Çankırı"], ["country_id", 1], ["created_at", "2017-12-11 21:18:18.141367"], ["updated_at", "2017-12-11 21:18:18.141367"]]
+  [1m[35m (0.7ms)[0m  SELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2  [["auditable_id", 18], ["auditable_type", "City"]]
+  [1m[36mSQL (0.7ms)[0m  [1mINSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["action", "create"], ["audited_changes", "---\nname: Çankırı\ncountry_id: 1\n"], ["auditable_id", 18], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:18.152926"], ["version", 1], ["request_uuid", "875905e6-ade2-4407-bd02-3c24baf36f06"]]
+  [1m[35m (8.5ms)[0m  COMMIT
+  [1m[36m (0.4ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.7ms)[0m  INSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["name", "Çorum"], ["country_id", 1], ["created_at", "2017-12-11 21:18:18.173773"], ["updated_at", "2017-12-11 21:18:18.173773"]]
+  [1m[36m (0.6ms)[0m  [1mSELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2[0m  [["auditable_id", 19], ["auditable_type", "City"]]
+  [1m[35mSQL (0.7ms)[0m  INSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"  [["action", "create"], ["audited_changes", "---\nname: Çorum\ncountry_id: 1\n"], ["auditable_id", 19], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:18.184435"], ["version", 1], ["request_uuid", "544fa622-7f10-437a-b031-d36655ba46cd"]]
+  [1m[36m (10.6ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36mSQL (0.8ms)[0m  [1mINSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Denizli"], ["country_id", 1], ["created_at", "2017-12-11 21:18:18.207637"], ["updated_at", "2017-12-11 21:18:18.207637"]]
+  [1m[35m (0.7ms)[0m  SELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2  [["auditable_id", 20], ["auditable_type", "City"]]
+  [1m[36mSQL (0.9ms)[0m  [1mINSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["action", "create"], ["audited_changes", "---\nname: Denizli\ncountry_id: 1\n"], ["auditable_id", 20], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:18.219659"], ["version", 1], ["request_uuid", "3c16e098-121f-4554-889a-f361f99a9ee1"]]
+  [1m[35m (7.2ms)[0m  COMMIT
+  [1m[36m (0.5ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["name", "Diyarbakır"], ["country_id", 1], ["created_at", "2017-12-11 21:18:18.240237"], ["updated_at", "2017-12-11 21:18:18.240237"]]
+  [1m[36m (0.8ms)[0m  [1mSELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2[0m  [["auditable_id", 21], ["auditable_type", "City"]]
+  [1m[35mSQL (0.9ms)[0m  INSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"  [["action", "create"], ["audited_changes", "---\nname: Diyarbakır\ncountry_id: 1\n"], ["auditable_id", 21], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:18.254156"], ["version", 1], ["request_uuid", "704bc7a3-7c5b-4678-bf92-a2581832ccb0"]]
+  [1m[36m (12.8ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36mSQL (0.8ms)[0m  [1mINSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Edirne"], ["country_id", 1], ["created_at", "2017-12-11 21:18:18.284400"], ["updated_at", "2017-12-11 21:18:18.284400"]]
+  [1m[35m (0.7ms)[0m  SELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2  [["auditable_id", 22], ["auditable_type", "City"]]
+  [1m[36mSQL (0.7ms)[0m  [1mINSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["action", "create"], ["audited_changes", "---\nname: Edirne\ncountry_id: 1\n"], ["auditable_id", 22], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:18.296223"], ["version", 1], ["request_uuid", "02b3ff72-ba37-472b-820c-a7e8525db2d3"]]
+  [1m[35m (8.1ms)[0m  COMMIT
+  [1m[36m (0.5ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["name", "Elazığ"], ["country_id", 1], ["created_at", "2017-12-11 21:18:18.317566"], ["updated_at", "2017-12-11 21:18:18.317566"]]
+  [1m[36m (0.7ms)[0m  [1mSELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2[0m  [["auditable_id", 23], ["auditable_type", "City"]]
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"  [["action", "create"], ["audited_changes", "---\nname: Elazığ\ncountry_id: 1\n"], ["auditable_id", 23], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:18.328542"], ["version", 1], ["request_uuid", "8f0a8c23-9d8b-477a-b16a-6c847a88b886"]]
+  [1m[36m (9.5ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36mSQL (0.9ms)[0m  [1mINSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Erzincan"], ["country_id", 1], ["created_at", "2017-12-11 21:18:18.350666"], ["updated_at", "2017-12-11 21:18:18.350666"]]
+  [1m[35m (0.7ms)[0m  SELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2  [["auditable_id", 24], ["auditable_type", "City"]]
+  [1m[36mSQL (0.7ms)[0m  [1mINSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["action", "create"], ["audited_changes", "---\nname: Erzincan\ncountry_id: 1\n"], ["auditable_id", 24], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:18.362184"], ["version", 1], ["request_uuid", "771b2617-066d-4876-9368-f3a29a7545f3"]]
+  [1m[35m (8.8ms)[0m  COMMIT
+  [1m[36m (0.5ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["name", "Erzurum"], ["country_id", 1], ["created_at", "2017-12-11 21:18:18.383537"], ["updated_at", "2017-12-11 21:18:18.383537"]]
+  [1m[36m (0.8ms)[0m  [1mSELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2[0m  [["auditable_id", 25], ["auditable_type", "City"]]
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"  [["action", "create"], ["audited_changes", "---\nname: Erzurum\ncountry_id: 1\n"], ["auditable_id", 25], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:18.396789"], ["version", 1], ["request_uuid", "556e7bd1-ddfe-4f74-a302-8d81878182c5"]]
+  [1m[36m (28.9ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36mSQL (0.8ms)[0m  [1mINSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Eskişehir"], ["country_id", 1], ["created_at", "2017-12-11 21:18:18.438692"], ["updated_at", "2017-12-11 21:18:18.438692"]]
+  [1m[35m (0.7ms)[0m  SELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2  [["auditable_id", 26], ["auditable_type", "City"]]
+  [1m[36mSQL (0.7ms)[0m  [1mINSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["action", "create"], ["audited_changes", "---\nname: Eskişehir\ncountry_id: 1\n"], ["auditable_id", 26], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:18.450045"], ["version", 1], ["request_uuid", "0e56ea8e-65f0-4588-bd8b-106322fc3b7a"]]
+  [1m[35m (8.8ms)[0m  COMMIT
+  [1m[36m (0.5ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["name", "Gaziantep"], ["country_id", 1], ["created_at", "2017-12-11 21:18:18.471898"], ["updated_at", "2017-12-11 21:18:18.471898"]]
+  [1m[36m (0.7ms)[0m  [1mSELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2[0m  [["auditable_id", 27], ["auditable_type", "City"]]
+  [1m[35mSQL (0.7ms)[0m  INSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"  [["action", "create"], ["audited_changes", "---\nname: Gaziantep\ncountry_id: 1\n"], ["auditable_id", 27], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:18.483147"], ["version", 1], ["request_uuid", "655416e5-06fa-40dc-84f5-e9a8ca61443b"]]
+  [1m[36m (9.1ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36mSQL (0.8ms)[0m  [1mINSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Giresun"], ["country_id", 1], ["created_at", "2017-12-11 21:18:18.504908"], ["updated_at", "2017-12-11 21:18:18.504908"]]
+  [1m[35m (0.7ms)[0m  SELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2  [["auditable_id", 28], ["auditable_type", "City"]]
+  [1m[36mSQL (0.7ms)[0m  [1mINSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["action", "create"], ["audited_changes", "---\nname: Giresun\ncountry_id: 1\n"], ["auditable_id", 28], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:18.516179"], ["version", 1], ["request_uuid", "bb2067e1-998f-457b-bb4b-e047146b41bf"]]
+  [1m[35m (9.0ms)[0m  COMMIT
+  [1m[36m (0.5ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["name", "Gümüşhane"], ["country_id", 1], ["created_at", "2017-12-11 21:18:18.537904"], ["updated_at", "2017-12-11 21:18:18.537904"]]
+  [1m[36m (0.7ms)[0m  [1mSELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2[0m  [["auditable_id", 29], ["auditable_type", "City"]]
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"  [["action", "create"], ["audited_changes", "---\nname: Gümüşhane\ncountry_id: 1\n"], ["auditable_id", 29], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:18.549278"], ["version", 1], ["request_uuid", "367144c2-310c-47ed-b1d7-165cc2906abe"]]
+  [1m[36m (8.7ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36mSQL (0.8ms)[0m  [1mINSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Hakkari"], ["country_id", 1], ["created_at", "2017-12-11 21:18:18.570895"], ["updated_at", "2017-12-11 21:18:18.570895"]]
+  [1m[35m (0.6ms)[0m  SELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2  [["auditable_id", 30], ["auditable_type", "City"]]
+  [1m[36mSQL (0.7ms)[0m  [1mINSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["action", "create"], ["audited_changes", "---\nname: Hakkari\ncountry_id: 1\n"], ["auditable_id", 30], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:18.582766"], ["version", 1], ["request_uuid", "b36a964c-26c9-4c99-b353-80b0de7a71cd"]]
+  [1m[35m (8.3ms)[0m  COMMIT
+  [1m[36m (0.6ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["name", "Hatay"], ["country_id", 1], ["created_at", "2017-12-11 21:18:18.603916"], ["updated_at", "2017-12-11 21:18:18.603916"]]
+  [1m[36m (0.7ms)[0m  [1mSELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2[0m  [["auditable_id", 31], ["auditable_type", "City"]]
+  [1m[35mSQL (0.7ms)[0m  INSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"  [["action", "create"], ["audited_changes", "---\nname: Hatay\ncountry_id: 1\n"], ["auditable_id", 31], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:18.615145"], ["version", 1], ["request_uuid", "009c6d37-59ce-486b-b9eb-aced883c149a"]]
+  [1m[36m (9.0ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.6ms)[0m  BEGIN
+  [1m[36mSQL (0.8ms)[0m  [1mINSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Isparta"], ["country_id", 1], ["created_at", "2017-12-11 21:18:18.636971"], ["updated_at", "2017-12-11 21:18:18.636971"]]
+  [1m[35m (0.6ms)[0m  SELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2  [["auditable_id", 32], ["auditable_type", "City"]]
+  [1m[36mSQL (0.8ms)[0m  [1mINSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["action", "create"], ["audited_changes", "---\nname: Isparta\ncountry_id: 1\n"], ["auditable_id", 32], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:18.648030"], ["version", 1], ["request_uuid", "04e54c62-4a7c-4ed2-9bdd-ec9cd705a09b"]]
+  [1m[35m (8.8ms)[0m  COMMIT
+  [1m[36m (0.5ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["name", "Mersin"], ["country_id", 1], ["created_at", "2017-12-11 21:18:18.669679"], ["updated_at", "2017-12-11 21:18:18.669679"]]
+  [1m[36m (0.7ms)[0m  [1mSELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2[0m  [["auditable_id", 33], ["auditable_type", "City"]]
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"  [["action", "create"], ["audited_changes", "---\nname: Mersin\ncountry_id: 1\n"], ["auditable_id", 33], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:18.680553"], ["version", 1], ["request_uuid", "eb729228-3f75-4a5b-8924-221b5198d58b"]]
+  [1m[36m (9.5ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36mSQL (0.8ms)[0m  [1mINSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "İstanbul"], ["country_id", 1], ["created_at", "2017-12-11 21:18:18.703173"], ["updated_at", "2017-12-11 21:18:18.703173"]]
+  [1m[35m (0.7ms)[0m  SELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2  [["auditable_id", 34], ["auditable_type", "City"]]
+  [1m[36mSQL (0.8ms)[0m  [1mINSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["action", "create"], ["audited_changes", "---\nname: İstanbul\ncountry_id: 1\n"], ["auditable_id", 34], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:18.714239"], ["version", 1], ["request_uuid", "c8040846-c4da-48ab-86b3-e07625f0373f"]]
+  [1m[35m (8.0ms)[0m  COMMIT
+  [1m[36m (0.5ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.9ms)[0m  INSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["name", "İzmir"], ["country_id", 1], ["created_at", "2017-12-11 21:18:18.736133"], ["updated_at", "2017-12-11 21:18:18.736133"]]
+  [1m[36m (0.7ms)[0m  [1mSELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2[0m  [["auditable_id", 35], ["auditable_type", "City"]]
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"  [["action", "create"], ["audited_changes", "---\nname: İzmir\ncountry_id: 1\n"], ["auditable_id", 35], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:18.747156"], ["version", 1], ["request_uuid", "f23fd403-646f-4439-b948-295e9589ff8e"]]
+  [1m[36m (8.8ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36mSQL (0.8ms)[0m  [1mINSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Kars"], ["country_id", 1], ["created_at", "2017-12-11 21:18:18.769291"], ["updated_at", "2017-12-11 21:18:18.769291"]]
+  [1m[35m (0.7ms)[0m  SELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2  [["auditable_id", 36], ["auditable_type", "City"]]
+  [1m[36mSQL (0.8ms)[0m  [1mINSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["action", "create"], ["audited_changes", "---\nname: Kars\ncountry_id: 1\n"], ["auditable_id", 36], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:18.780383"], ["version", 1], ["request_uuid", "9613db32-0dbb-4669-8c60-fc1c73788143"]]
+  [1m[35m (8.9ms)[0m  COMMIT
+  [1m[36m (0.5ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["name", "Kastamonu"], ["country_id", 1], ["created_at", "2017-12-11 21:18:18.801983"], ["updated_at", "2017-12-11 21:18:18.801983"]]
+  [1m[36m (0.7ms)[0m  [1mSELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2[0m  [["auditable_id", 37], ["auditable_type", "City"]]
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"  [["action", "create"], ["audited_changes", "---\nname: Kastamonu\ncountry_id: 1\n"], ["auditable_id", 37], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:18.813237"], ["version", 1], ["request_uuid", "e376fe25-687f-4dba-8f26-7ced18cdc917"]]
+  [1m[36m (9.1ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36mSQL (0.9ms)[0m  [1mINSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Kayseri"], ["country_id", 1], ["created_at", "2017-12-11 21:18:18.835130"], ["updated_at", "2017-12-11 21:18:18.835130"]]
+  [1m[35m (0.7ms)[0m  SELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2  [["auditable_id", 38], ["auditable_type", "City"]]
+  [1m[36mSQL (0.8ms)[0m  [1mINSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["action", "create"], ["audited_changes", "---\nname: Kayseri\ncountry_id: 1\n"], ["auditable_id", 38], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:18.846297"], ["version", 1], ["request_uuid", "bf0d08c8-3983-45f4-9d0e-6daf51a8f735"]]
+  [1m[35m (8.6ms)[0m  COMMIT
+  [1m[36m (0.5ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.9ms)[0m  INSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["name", "Kırklareli"], ["country_id", 1], ["created_at", "2017-12-11 21:18:18.868048"], ["updated_at", "2017-12-11 21:18:18.868048"]]
+  [1m[36m (0.7ms)[0m  [1mSELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2[0m  [["auditable_id", 39], ["auditable_type", "City"]]
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"  [["action", "create"], ["audited_changes", "---\nname: Kırklareli\ncountry_id: 1\n"], ["auditable_id", 39], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:18.879342"], ["version", 1], ["request_uuid", "64ff48db-dc5a-45af-a31a-92f742d9071e"]]
+  [1m[36m (8.9ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36mSQL (0.9ms)[0m  [1mINSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Kırşehir"], ["country_id", 1], ["created_at", "2017-12-11 21:18:18.901198"], ["updated_at", "2017-12-11 21:18:18.901198"]]
+  [1m[35m (0.6ms)[0m  SELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2  [["auditable_id", 40], ["auditable_type", "City"]]
+  [1m[36mSQL (0.7ms)[0m  [1mINSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["action", "create"], ["audited_changes", "---\nname: Kırşehir\ncountry_id: 1\n"], ["auditable_id", 40], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:18.912536"], ["version", 1], ["request_uuid", "0f87fb4b-90e0-46ee-9af9-b8ec8fec26b1"]]
+  [1m[35m (9.1ms)[0m  COMMIT
+  [1m[36m (0.5ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.9ms)[0m  INSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["name", "Kocaeli"], ["country_id", 1], ["created_at", "2017-12-11 21:18:18.934131"], ["updated_at", "2017-12-11 21:18:18.934131"]]
+  [1m[36m (0.7ms)[0m  [1mSELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2[0m  [["auditable_id", 41], ["auditable_type", "City"]]
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"  [["action", "create"], ["audited_changes", "---\nname: Kocaeli\ncountry_id: 1\n"], ["auditable_id", 41], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:18.945476"], ["version", 1], ["request_uuid", "21b5df90-0abb-4865-8ec4-9719f748433e"]]
+  [1m[36m (8.9ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36mSQL (0.9ms)[0m  [1mINSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Konya"], ["country_id", 1], ["created_at", "2017-12-11 21:18:18.967538"], ["updated_at", "2017-12-11 21:18:18.967538"]]
+  [1m[35m (0.7ms)[0m  SELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2  [["auditable_id", 42], ["auditable_type", "City"]]
+  [1m[36mSQL (0.7ms)[0m  [1mINSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["action", "create"], ["audited_changes", "---\nname: Konya\ncountry_id: 1\n"], ["auditable_id", 42], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:18.979176"], ["version", 1], ["request_uuid", "d259c0ac-767a-4e5f-a304-c824cb8dc133"]]
+  [1m[35m (8.0ms)[0m  COMMIT
+  [1m[36m (0.4ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["name", "Kütahya"], ["country_id", 1], ["created_at", "2017-12-11 21:18:18.999507"], ["updated_at", "2017-12-11 21:18:18.999507"]]
+  [1m[36m (0.6ms)[0m  [1mSELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2[0m  [["auditable_id", 43], ["auditable_type", "City"]]
+  [1m[35mSQL (0.7ms)[0m  INSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"  [["action", "create"], ["audited_changes", "---\nname: Kütahya\ncountry_id: 1\n"], ["auditable_id", 43], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:19.010436"], ["version", 1], ["request_uuid", "f546e03f-5873-468d-b480-7a50ac538b8d"]]
+  [1m[36m (10.0ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36mSQL (0.9ms)[0m  [1mINSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Malatya"], ["country_id", 1], ["created_at", "2017-12-11 21:18:19.033290"], ["updated_at", "2017-12-11 21:18:19.033290"]]
+  [1m[35m (0.7ms)[0m  SELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2  [["auditable_id", 44], ["auditable_type", "City"]]
+  [1m[36mSQL (0.7ms)[0m  [1mINSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["action", "create"], ["audited_changes", "---\nname: Malatya\ncountry_id: 1\n"], ["auditable_id", 44], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:19.044612"], ["version", 1], ["request_uuid", "0c94a257-007a-46c2-b22e-aff054cdba68"]]
+  [1m[35m (8.7ms)[0m  COMMIT
+  [1m[36m (0.5ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["name", "Manisa"], ["country_id", 1], ["created_at", "2017-12-11 21:18:19.066175"], ["updated_at", "2017-12-11 21:18:19.066175"]]
+  [1m[36m (0.6ms)[0m  [1mSELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2[0m  [["auditable_id", 45], ["auditable_type", "City"]]
+  [1m[35mSQL (0.7ms)[0m  INSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"  [["action", "create"], ["audited_changes", "---\nname: Manisa\ncountry_id: 1\n"], ["auditable_id", 45], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:19.077248"], ["version", 1], ["request_uuid", "f9c91f36-0a38-4f59-b786-5c5c69d5190f"]]
+  [1m[36m (9.0ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36mSQL (0.9ms)[0m  [1mINSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Kahramanmaraş"], ["country_id", 1], ["created_at", "2017-12-11 21:18:19.099283"], ["updated_at", "2017-12-11 21:18:19.099283"]]
+  [1m[35m (0.6ms)[0m  SELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2  [["auditable_id", 46], ["auditable_type", "City"]]
+  [1m[36mSQL (0.7ms)[0m  [1mINSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["action", "create"], ["audited_changes", "---\nname: Kahramanmaraş\ncountry_id: 1\n"], ["auditable_id", 46], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:19.110436"], ["version", 1], ["request_uuid", "f4e9905a-e8b4-4749-9e07-0046fa5e7b23"]]
+  [1m[35m (8.9ms)[0m  COMMIT
+  [1m[36m (0.5ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.9ms)[0m  INSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["name", "Mardin"], ["country_id", 1], ["created_at", "2017-12-11 21:18:19.132378"], ["updated_at", "2017-12-11 21:18:19.132378"]]
+  [1m[36m (0.7ms)[0m  [1mSELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2[0m  [["auditable_id", 47], ["auditable_type", "City"]]
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"  [["action", "create"], ["audited_changes", "---\nname: Mardin\ncountry_id: 1\n"], ["auditable_id", 47], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:19.143548"], ["version", 1], ["request_uuid", "5b8c46f2-9177-4f2c-aa0b-3cb2bc4614e6"]]
+  [1m[36m (8.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.4ms)[0m  BEGIN
+  [1m[36mSQL (0.8ms)[0m  [1mINSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Muğla"], ["country_id", 1], ["created_at", "2017-12-11 21:18:19.165209"], ["updated_at", "2017-12-11 21:18:19.165209"]]
+  [1m[35m (0.5ms)[0m  SELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2  [["auditable_id", 48], ["auditable_type", "City"]]
+  [1m[36mSQL (0.6ms)[0m  [1mINSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["action", "create"], ["audited_changes", "---\nname: Muğla\ncountry_id: 1\n"], ["auditable_id", 48], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:19.176232"], ["version", 1], ["request_uuid", "0a2a4f5f-a6e9-45b6-8e55-b24640cd7cac"]]
+  [1m[35m (9.3ms)[0m  COMMIT
+  [1m[36m (0.4ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["name", "Muş"], ["country_id", 1], ["created_at", "2017-12-11 21:18:19.197672"], ["updated_at", "2017-12-11 21:18:19.197672"]]
+  [1m[36m (0.8ms)[0m  [1mSELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2[0m  [["auditable_id", 49], ["auditable_type", "City"]]
+  [1m[35mSQL (1.3ms)[0m  INSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"  [["action", "create"], ["audited_changes", "---\nname: Muş\ncountry_id: 1\n"], ["auditable_id", 49], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:19.208623"], ["version", 1], ["request_uuid", "9c9c60c0-a589-45a2-ae67-660355e5025d"]]
+  [1m[36m (5.5ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.4ms)[0m  BEGIN
+  [1m[36mSQL (0.8ms)[0m  [1mINSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Nevşehir"], ["country_id", 1], ["created_at", "2017-12-11 21:18:19.230728"], ["updated_at", "2017-12-11 21:18:19.230728"]]
+  [1m[35m (0.7ms)[0m  SELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2  [["auditable_id", 50], ["auditable_type", "City"]]
+  [1m[36mSQL (0.8ms)[0m  [1mINSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["action", "create"], ["audited_changes", "---\nname: Nevşehir\ncountry_id: 1\n"], ["auditable_id", 50], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:19.242213"], ["version", 1], ["request_uuid", "1825589e-e9db-45a2-aec2-f4241cc2554d"]]
+  [1m[35m (9.3ms)[0m  COMMIT
+  [1m[36m (0.5ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.9ms)[0m  INSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["name", "Niğde"], ["country_id", 1], ["created_at", "2017-12-11 21:18:19.264377"], ["updated_at", "2017-12-11 21:18:19.264377"]]
+  [1m[36m (0.6ms)[0m  [1mSELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2[0m  [["auditable_id", 51], ["auditable_type", "City"]]
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"  [["action", "create"], ["audited_changes", "---\nname: Niğde\ncountry_id: 1\n"], ["auditable_id", 51], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:19.275765"], ["version", 1], ["request_uuid", "1b6b6686-2b80-407a-81ac-8244ef367be3"]]
+  [1m[36m (8.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36mSQL (0.9ms)[0m  [1mINSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Ordu"], ["country_id", 1], ["created_at", "2017-12-11 21:18:19.297499"], ["updated_at", "2017-12-11 21:18:19.297499"]]
+  [1m[35m (0.6ms)[0m  SELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2  [["auditable_id", 52], ["auditable_type", "City"]]
+  [1m[36mSQL (0.7ms)[0m  [1mINSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["action", "create"], ["audited_changes", "---\nname: Ordu\ncountry_id: 1\n"], ["auditable_id", 52], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:19.309007"], ["version", 1], ["request_uuid", "a3fc4410-5b54-450c-90aa-984509fbe7bd"]]
+  [1m[35m (8.3ms)[0m  COMMIT
+  [1m[36m (0.5ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["name", "Rize"], ["country_id", 1], ["created_at", "2017-12-11 21:18:19.330384"], ["updated_at", "2017-12-11 21:18:19.330384"]]
+  [1m[36m (0.7ms)[0m  [1mSELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2[0m  [["auditable_id", 53], ["auditable_type", "City"]]
+  [1m[35mSQL (1.1ms)[0m  INSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"  [["action", "create"], ["audited_changes", "---\nname: Rize\ncountry_id: 1\n"], ["auditable_id", 53], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:19.342100"], ["version", 1], ["request_uuid", "58fc7ef3-3251-4d97-8e7c-906d912aace1"]]
+  [1m[36m (7.2ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36mSQL (0.8ms)[0m  [1mINSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Sakarya"], ["country_id", 1], ["created_at", "2017-12-11 21:18:19.363422"], ["updated_at", "2017-12-11 21:18:19.363422"]]
+  [1m[35m (0.7ms)[0m  SELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2  [["auditable_id", 54], ["auditable_type", "City"]]
+  [1m[36mSQL (0.7ms)[0m  [1mINSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["action", "create"], ["audited_changes", "---\nname: Sakarya\ncountry_id: 1\n"], ["auditable_id", 54], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:19.375272"], ["version", 1], ["request_uuid", "80ac2ca3-d896-4db3-9b61-9f959ec0abb5"]]
+  [1m[35m (8.3ms)[0m  COMMIT
+  [1m[36m (0.4ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.9ms)[0m  INSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["name", "Samsun"], ["country_id", 1], ["created_at", "2017-12-11 21:18:19.396608"], ["updated_at", "2017-12-11 21:18:19.396608"]]
+  [1m[36m (0.7ms)[0m  [1mSELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2[0m  [["auditable_id", 55], ["auditable_type", "City"]]
+  [1m[35mSQL (0.7ms)[0m  INSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"  [["action", "create"], ["audited_changes", "---\nname: Samsun\ncountry_id: 1\n"], ["auditable_id", 55], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:19.408497"], ["version", 1], ["request_uuid", "14a448b7-ace6-48bf-bee7-9952cbdc412c"]]
+  [1m[36m (7.8ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36mSQL (0.8ms)[0m  [1mINSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Siirt"], ["country_id", 1], ["created_at", "2017-12-11 21:18:19.429461"], ["updated_at", "2017-12-11 21:18:19.429461"]]
+  [1m[35m (0.7ms)[0m  SELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2  [["auditable_id", 56], ["auditable_type", "City"]]
+  [1m[36mSQL (0.8ms)[0m  [1mINSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["action", "create"], ["audited_changes", "---\nname: Siirt\ncountry_id: 1\n"], ["auditable_id", 56], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:19.441190"], ["version", 1], ["request_uuid", "39e33081-8bdc-441c-a6fe-9bf97e213e44"]]
+  [1m[35m (7.5ms)[0m  COMMIT
+  [1m[36m (0.5ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.9ms)[0m  INSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["name", "Sinop"], ["country_id", 1], ["created_at", "2017-12-11 21:18:19.462407"], ["updated_at", "2017-12-11 21:18:19.462407"]]
+  [1m[36m (0.9ms)[0m  [1mSELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2[0m  [["auditable_id", 57], ["auditable_type", "City"]]
+  [1m[35mSQL (1.0ms)[0m  INSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"  [["action", "create"], ["audited_changes", "---\nname: Sinop\ncountry_id: 1\n"], ["auditable_id", 57], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:19.492080"], ["version", 1], ["request_uuid", "b36c2772-8e3c-49e9-8b24-907f6ce5ef6d"]]
+  [1m[36m (10.5ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36mSQL (0.9ms)[0m  [1mINSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Sivas"], ["country_id", 1], ["created_at", "2017-12-11 21:18:19.517828"], ["updated_at", "2017-12-11 21:18:19.517828"]]
+  [1m[35m (0.7ms)[0m  SELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2  [["auditable_id", 58], ["auditable_type", "City"]]
+  [1m[36mSQL (0.8ms)[0m  [1mINSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["action", "create"], ["audited_changes", "---\nname: Sivas\ncountry_id: 1\n"], ["auditable_id", 58], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:19.530112"], ["version", 1], ["request_uuid", "7bfdc7d8-aa5d-4089-b3aa-812bb1d008d0"]]
+  [1m[35m (6.4ms)[0m  COMMIT
+  [1m[36m (0.4ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["name", "Tekirdağ"], ["country_id", 1], ["created_at", "2017-12-11 21:18:19.550052"], ["updated_at", "2017-12-11 21:18:19.550052"]]
+  [1m[36m (0.8ms)[0m  [1mSELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2[0m  [["auditable_id", 59], ["auditable_type", "City"]]
+  [1m[35mSQL (0.9ms)[0m  INSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"  [["action", "create"], ["audited_changes", "---\nname: Tekirdağ\ncountry_id: 1\n"], ["auditable_id", 59], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:19.561925"], ["version", 1], ["request_uuid", "17c76014-b759-43b5-9cd0-468a7a346f00"]]
+  [1m[36m (13.8ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.4ms)[0m  BEGIN
+  [1m[36mSQL (0.7ms)[0m  [1mINSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Tokat"], ["country_id", 1], ["created_at", "2017-12-11 21:18:19.594684"], ["updated_at", "2017-12-11 21:18:19.594684"]]
+  [1m[35m (0.7ms)[0m  SELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2  [["auditable_id", 60], ["auditable_type", "City"]]
+  [1m[36mSQL (0.8ms)[0m  [1mINSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["action", "create"], ["audited_changes", "---\nname: Tokat\ncountry_id: 1\n"], ["auditable_id", 60], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:19.612027"], ["version", 1], ["request_uuid", "1d11e027-02e4-486d-abda-7f3969bfcfe7"]]
+  [1m[35m (32.8ms)[0m  COMMIT
+  [1m[36m (0.5ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["name", "Trabzon"], ["country_id", 1], ["created_at", "2017-12-11 21:18:19.660870"], ["updated_at", "2017-12-11 21:18:19.660870"]]
+  [1m[36m (0.8ms)[0m  [1mSELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2[0m  [["auditable_id", 61], ["auditable_type", "City"]]
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"  [["action", "create"], ["audited_changes", "---\nname: Trabzon\ncountry_id: 1\n"], ["auditable_id", 61], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:19.672889"], ["version", 1], ["request_uuid", "87972622-e729-4db4-85f3-36d9e82385fe"]]
+  [1m[36m (6.7ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36mSQL (1.1ms)[0m  [1mINSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Tunceli"], ["country_id", 1], ["created_at", "2017-12-11 21:18:19.693401"], ["updated_at", "2017-12-11 21:18:19.693401"]]
+  [1m[35m (0.7ms)[0m  SELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2  [["auditable_id", 62], ["auditable_type", "City"]]
+  [1m[36mSQL (1.1ms)[0m  [1mINSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["action", "create"], ["audited_changes", "---\nname: Tunceli\ncountry_id: 1\n"], ["auditable_id", 62], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:19.709198"], ["version", 1], ["request_uuid", "85466070-dcb6-45d2-8eec-c4a58762cbac"]]
+  [1m[35m (12.5ms)[0m  COMMIT
+  [1m[36m (0.5ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["name", "Şanlıurfa"], ["country_id", 1], ["created_at", "2017-12-11 21:18:19.737661"], ["updated_at", "2017-12-11 21:18:19.737661"]]
+  [1m[36m (0.6ms)[0m  [1mSELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2[0m  [["auditable_id", 63], ["auditable_type", "City"]]
+  [1m[35mSQL (0.7ms)[0m  INSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"  [["action", "create"], ["audited_changes", "---\nname: Şanlıurfa\ncountry_id: 1\n"], ["auditable_id", 63], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:19.749095"], ["version", 1], ["request_uuid", "10980d34-c3f2-4b2b-b153-519a61e6b9ea"]]
+  [1m[36m (8.8ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36mSQL (0.8ms)[0m  [1mINSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Uşak"], ["country_id", 1], ["created_at", "2017-12-11 21:18:19.770640"], ["updated_at", "2017-12-11 21:18:19.770640"]]
+  [1m[35m (0.6ms)[0m  SELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2  [["auditable_id", 64], ["auditable_type", "City"]]
+  [1m[36mSQL (0.7ms)[0m  [1mINSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["action", "create"], ["audited_changes", "---\nname: Uşak\ncountry_id: 1\n"], ["auditable_id", 64], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:19.781734"], ["version", 1], ["request_uuid", "92041559-a0a1-473d-8f08-c1442239e283"]]
+  [1m[35m (9.0ms)[0m  COMMIT
+  [1m[36m (0.5ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["name", "Van"], ["country_id", 1], ["created_at", "2017-12-11 21:18:19.803875"], ["updated_at", "2017-12-11 21:18:19.803875"]]
+  [1m[36m (0.6ms)[0m  [1mSELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2[0m  [["auditable_id", 65], ["auditable_type", "City"]]
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"  [["action", "create"], ["audited_changes", "---\nname: Van\ncountry_id: 1\n"], ["auditable_id", 65], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:19.814916"], ["version", 1], ["request_uuid", "368da3f1-b0ee-4581-8619-66be0e2daccd"]]
+  [1m[36m (8.7ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36mSQL (0.8ms)[0m  [1mINSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Yozgat"], ["country_id", 1], ["created_at", "2017-12-11 21:18:19.836807"], ["updated_at", "2017-12-11 21:18:19.836807"]]
+  [1m[35m (0.7ms)[0m  SELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2  [["auditable_id", 66], ["auditable_type", "City"]]
+  [1m[36mSQL (0.8ms)[0m  [1mINSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["action", "create"], ["audited_changes", "---\nname: Yozgat\ncountry_id: 1\n"], ["auditable_id", 66], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:19.848385"], ["version", 1], ["request_uuid", "8913f02d-29fe-4416-a521-af3da171be82"]]
+  [1m[35m (8.2ms)[0m  COMMIT
+  [1m[36m (0.6ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["name", "Zonguldak"], ["country_id", 1], ["created_at", "2017-12-11 21:18:19.869803"], ["updated_at", "2017-12-11 21:18:19.869803"]]
+  [1m[36m (0.6ms)[0m  [1mSELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2[0m  [["auditable_id", 67], ["auditable_type", "City"]]
+  [1m[35mSQL (0.7ms)[0m  INSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"  [["action", "create"], ["audited_changes", "---\nname: Zonguldak\ncountry_id: 1\n"], ["auditable_id", 67], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:19.880800"], ["version", 1], ["request_uuid", "a5799e40-45cb-4d85-b97f-c2166822c49b"]]
+  [1m[36m (9.2ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36mSQL (0.9ms)[0m  [1mINSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Aksaray"], ["country_id", 1], ["created_at", "2017-12-11 21:18:19.902783"], ["updated_at", "2017-12-11 21:18:19.902783"]]
+  [1m[35m (0.6ms)[0m  SELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2  [["auditable_id", 68], ["auditable_type", "City"]]
+  [1m[36mSQL (0.7ms)[0m  [1mINSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["action", "create"], ["audited_changes", "---\nname: Aksaray\ncountry_id: 1\n"], ["auditable_id", 68], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:19.914078"], ["version", 1], ["request_uuid", "e50d459f-2879-49eb-819b-7c3d97941819"]]
+  [1m[35m (9.0ms)[0m  COMMIT
+  [1m[36m (0.5ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["name", "Bayburt"], ["country_id", 1], ["created_at", "2017-12-11 21:18:19.935909"], ["updated_at", "2017-12-11 21:18:19.935909"]]
+  [1m[36m (0.6ms)[0m  [1mSELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2[0m  [["auditable_id", 69], ["auditable_type", "City"]]
+  [1m[35mSQL (0.7ms)[0m  INSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"  [["action", "create"], ["audited_changes", "---\nname: Bayburt\ncountry_id: 1\n"], ["auditable_id", 69], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:19.947040"], ["version", 1], ["request_uuid", "3bb49d29-f621-4880-a559-59cae37f0ce3"]]
+  [1m[36m (9.0ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.6ms)[0m  BEGIN
+  [1m[36mSQL (0.9ms)[0m  [1mINSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Karaman"], ["country_id", 1], ["created_at", "2017-12-11 21:18:19.970462"], ["updated_at", "2017-12-11 21:18:19.970462"]]
+  [1m[35m (0.8ms)[0m  SELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2  [["auditable_id", 70], ["auditable_type", "City"]]
+  [1m[36mSQL (1.0ms)[0m  [1mINSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["action", "create"], ["audited_changes", "---\nname: Karaman\ncountry_id: 1\n"], ["auditable_id", 70], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:19.984329"], ["version", 1], ["request_uuid", "e23129f9-dcb6-4e19-bc73-097417ba5ccc"]]
+  [1m[35m (10.6ms)[0m  COMMIT
+  [1m[36m (0.5ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (1.1ms)[0m  INSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["name", "Kırıkkale"], ["country_id", 1], ["created_at", "2017-12-11 21:18:20.013633"], ["updated_at", "2017-12-11 21:18:20.013633"]]
+  [1m[36m (0.8ms)[0m  [1mSELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2[0m  [["auditable_id", 71], ["auditable_type", "City"]]
+  [1m[35mSQL (0.9ms)[0m  INSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"  [["action", "create"], ["audited_changes", "---\nname: Kırıkkale\ncountry_id: 1\n"], ["auditable_id", 71], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:20.033183"], ["version", 1], ["request_uuid", "bab630bb-a595-473a-af80-f2d00c82b03e"]]
+  [1m[36m (9.6ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36mSQL (1.0ms)[0m  [1mINSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Batman"], ["country_id", 1], ["created_at", "2017-12-11 21:18:20.057037"], ["updated_at", "2017-12-11 21:18:20.057037"]]
+  [1m[35m (0.8ms)[0m  SELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2  [["auditable_id", 72], ["auditable_type", "City"]]
+  [1m[36mSQL (0.9ms)[0m  [1mINSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["action", "create"], ["audited_changes", "---\nname: Batman\ncountry_id: 1\n"], ["auditable_id", 72], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:20.069483"], ["version", 1], ["request_uuid", "3f0b74ae-57a8-4dae-9497-848eaf3b346d"]]
+  [1m[35m (5.3ms)[0m  COMMIT
+  [1m[36m (0.4ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.9ms)[0m  INSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["name", "Şırnak"], ["country_id", 1], ["created_at", "2017-12-11 21:18:20.089443"], ["updated_at", "2017-12-11 21:18:20.089443"]]
+  [1m[36m (0.8ms)[0m  [1mSELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2[0m  [["auditable_id", 73], ["auditable_type", "City"]]
+  [1m[35mSQL (0.9ms)[0m  INSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"  [["action", "create"], ["audited_changes", "---\nname: Şırnak\ncountry_id: 1\n"], ["auditable_id", 73], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:20.101150"], ["version", 1], ["request_uuid", "9670f0ca-b6b2-4663-9383-0566bb8cff41"]]
+  [1m[36m (7.6ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.4ms)[0m  BEGIN
+  [1m[36mSQL (0.9ms)[0m  [1mINSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Bartın"], ["country_id", 1], ["created_at", "2017-12-11 21:18:20.122693"], ["updated_at", "2017-12-11 21:18:20.122693"]]
+  [1m[35m (0.7ms)[0m  SELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2  [["auditable_id", 74], ["auditable_type", "City"]]
+  [1m[36mSQL (0.9ms)[0m  [1mINSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["action", "create"], ["audited_changes", "---\nname: Bartın\ncountry_id: 1\n"], ["auditable_id", 74], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:20.134198"], ["version", 1], ["request_uuid", "5614967a-4722-4ac0-bf11-2da12c7c63d0"]]
+  [1m[35m (7.5ms)[0m  COMMIT
+  [1m[36m (0.4ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.9ms)[0m  INSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["name", "Ardahan"], ["country_id", 1], ["created_at", "2017-12-11 21:18:20.155797"], ["updated_at", "2017-12-11 21:18:20.155797"]]
+  [1m[36m (0.7ms)[0m  [1mSELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2[0m  [["auditable_id", 75], ["auditable_type", "City"]]
+  [1m[35mSQL (0.9ms)[0m  INSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"  [["action", "create"], ["audited_changes", "---\nname: Ardahan\ncountry_id: 1\n"], ["auditable_id", 75], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:20.167196"], ["version", 1], ["request_uuid", "a0a4c3aa-f9a9-4c2f-bc78-0c8adff3a1b3"]]
+  [1m[36m (7.9ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36mSQL (0.9ms)[0m  [1mINSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Iğdır"], ["country_id", 1], ["created_at", "2017-12-11 21:18:20.189143"], ["updated_at", "2017-12-11 21:18:20.189143"]]
+  [1m[35m (0.8ms)[0m  SELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2  [["auditable_id", 76], ["auditable_type", "City"]]
+  [1m[36mSQL (0.8ms)[0m  [1mINSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["action", "create"], ["audited_changes", "---\nname: Iğdır\ncountry_id: 1\n"], ["auditable_id", 76], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:20.200444"], ["version", 1], ["request_uuid", "91db3afd-6c33-4a08-aba4-4abf7fdf4b38"]]
+  [1m[35m (8.4ms)[0m  COMMIT
+  [1m[36m (0.5ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["name", "Yalova"], ["country_id", 1], ["created_at", "2017-12-11 21:18:20.222179"], ["updated_at", "2017-12-11 21:18:20.222179"]]
+  [1m[36m (0.7ms)[0m  [1mSELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2[0m  [["auditable_id", 77], ["auditable_type", "City"]]
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"  [["action", "create"], ["audited_changes", "---\nname: Yalova\ncountry_id: 1\n"], ["auditable_id", 77], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:20.233263"], ["version", 1], ["request_uuid", "e0211a5c-e06e-4d5b-8b96-4db7d141e3ee"]]
+  [1m[36m (7.9ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36mSQL (0.9ms)[0m  [1mINSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Karabük"], ["country_id", 1], ["created_at", "2017-12-11 21:18:20.254757"], ["updated_at", "2017-12-11 21:18:20.254757"]]
+  [1m[35m (0.7ms)[0m  SELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2  [["auditable_id", 78], ["auditable_type", "City"]]
+  [1m[36mSQL (0.8ms)[0m  [1mINSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["action", "create"], ["audited_changes", "---\nname: Karabük\ncountry_id: 1\n"], ["auditable_id", 78], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:20.266121"], ["version", 1], ["request_uuid", "39a8b6e1-8728-43b3-b6cc-489ec695eec5"]]
+  [1m[35m (8.4ms)[0m  COMMIT
+  [1m[36m (0.4ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (1.0ms)[0m  INSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["name", "Kilis"], ["country_id", 1], ["created_at", "2017-12-11 21:18:20.287953"], ["updated_at", "2017-12-11 21:18:20.287953"]]
+  [1m[36m (0.7ms)[0m  [1mSELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2[0m  [["auditable_id", 79], ["auditable_type", "City"]]
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"  [["action", "create"], ["audited_changes", "---\nname: Kilis\ncountry_id: 1\n"], ["auditable_id", 79], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:20.300058"], ["version", 1], ["request_uuid", "aef41b32-cce4-4d61-a445-98f2d7ed39f7"]]
+  [1m[36m (51.8ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36mSQL (0.8ms)[0m  [1mINSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "Osmaniye"], ["country_id", 1], ["created_at", "2017-12-11 21:18:20.365491"], ["updated_at", "2017-12-11 21:18:20.365491"]]
+  [1m[35m (0.8ms)[0m  SELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2  [["auditable_id", 80], ["auditable_type", "City"]]
+  [1m[36mSQL (0.8ms)[0m  [1mINSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["action", "create"], ["audited_changes", "---\nname: Osmaniye\ncountry_id: 1\n"], ["auditable_id", 80], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:20.377093"], ["version", 1], ["request_uuid", "d6ac65f4-2521-4cd1-aac7-20635900294c"]]
+  [1m[35m (40.7ms)[0m  COMMIT
+  [1m[36m (0.5ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (1.1ms)[0m  INSERT INTO "cities" ("name", "country_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["name", "Düzce"], ["country_id", 1], ["created_at", "2017-12-11 21:18:20.431235"], ["updated_at", "2017-12-11 21:18:20.431235"]]
+  [1m[36m (0.8ms)[0m  [1mSELECT MAX("audits"."version") FROM "audits" WHERE "audits"."auditable_id" = $1 AND "audits"."auditable_type" = $2[0m  [["auditable_id", 81], ["auditable_type", "City"]]
+  [1m[35mSQL (0.9ms)[0m  INSERT INTO "audits" ("action", "audited_changes", "auditable_id", "auditable_type", "created_at", "version", "request_uuid") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"  [["action", "create"], ["audited_changes", "---\nname: Düzce\ncountry_id: 1\n"], ["auditable_id", 81], ["auditable_type", "City"], ["created_at", "2017-12-11 21:18:20.443855"], ["version", 1], ["request_uuid", "9871d1d4-bbcf-4c84-a9b9-34356dbd2193"]]
+  [1m[36m (81.5ms)[0m  [1mCOMMIT[0m
+
+
+Started GET "/" for 127.0.0.1 at 2017-12-12 00:19:42 +0300
+  [1m[36mActiveRecord::SchemaMigration Load (1.2ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Processing by WelcomeController#index as HTML
+  Rendered welcome/index.html.haml within layouts/application (2339.1ms)
+  Rendered layouts/partials/_warnings.html.haml (3.7ms)
+  Rendered layouts/partials/_messages.haml (11.2ms)
+Completed 200 OK in 36185ms (Views: 36125.3ms | ActiveRecord: 0.0ms)
